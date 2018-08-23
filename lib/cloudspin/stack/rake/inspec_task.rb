@@ -5,15 +5,16 @@ module Cloudspin
       class InspecTask < ::Rake::TaskLib
 
         attr_reader :stack_instance_id
+        attr_reader :work_folder
         attr_reader :inspec_folder
         attr_reader :inspec_target
-        attr_reader :work_folder
+        attr_reader :inspec_parameters
 
         def initialize(stack_instance:,
                        inspec_folder: './inspec',
                        work_folder: nil,
                        inspec_target: nil,
-                       inspec_parameters: [])
+                       inspec_parameters: {})
           @stack_instance = stack_instance
           @stack_instance_id = stack_instance.id
           @inspec_target = inspec_target
@@ -31,9 +32,26 @@ module Cloudspin
         def define
           desc 'Run inspec tests'
           task :inspec do |t, args|
-            # create_inspec_attributes.call(args)
+            build_attributes_file
             run_inspec_profile
           end
+        end
+
+        def build_attributes_file
+          ensure_path(inspec_attributes_file)
+          File.open(inspec_attributes_file, 'w') {|f|
+            f.write(inspec_parameters.merge(
+              { 'stack_instance_id' => stack_instance_id }
+            ).to_yaml)
+          }
+        end
+
+        def inspec_attributes_file
+          "#{work_folder}/inspec/attributes-for-stack-#{stack_instance_id}.yml"
+        end
+
+        def ensure_path(file_path)
+          mkpath(File.dirname(file_path))
         end
 
         def run_inspec_profile
@@ -52,6 +70,8 @@ module Cloudspin
             'inspec',
             'exec',
             "#{@inspec_folder}/#{inspec_profile_subfolder}",
+            '--attrs',
+            inspec_attributes_file,
             '--reporter',
             "json-rspec:#{inspec_profile_results_file(inspec_profile_name(inspec_profile_subfolder))}",
             'cli']
