@@ -41,7 +41,9 @@ module Cloudspin
           inspec_profiles_in(@inspec_folder).each { |inspec_profile_subfolder|
             cmd = inspec_command(inspec_profile_subfolder)
             puts cmd
-            system(cmd)
+            return if system(cmd)
+            $stderr.puts "#{cmd} failed"
+            exit $?.exitstatus || 1
           }
         end
 
