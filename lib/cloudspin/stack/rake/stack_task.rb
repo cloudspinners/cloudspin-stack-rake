@@ -21,7 +21,7 @@ module Cloudspin
           @instance.add_config_from_yaml("#{instance_folder}/stack-instance-defaults.yaml")
           @instance.add_config_from_yaml("#{instance_folder}/spin-local.yaml")
           @instance.add_config_from_yaml("#{instance_folder}/stack-instance-local.yaml")
-          @instance.add_parameter_values({ :deployment_identifier => id })
+          @instance.add_parameter_values({ :instance_identifier => id })
 
           define
         end
