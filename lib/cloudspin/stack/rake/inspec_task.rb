@@ -17,7 +17,7 @@ module Cloudspin
                        inspec_parameters: {})
           @stack_instance = stack_instance
           @stack_instance_id = stack_instance.id
-          @inspec_target = inspec_target
+          @inspec_target = inspec_target || inspec_target_for_aws
           @inspec_parameters = inspec_parameters
 
           @work_folder = work_folder || @stack_instance.working_folder
@@ -27,6 +27,12 @@ module Cloudspin
           else
             puts "No directory found: #{inspec_folder}"
           end
+        end
+
+        def inspec_target_for_aws
+          aws_region = @stack_instance.parameter_values['region']
+          aws_profile = @stack_instance.resource_values['assume_role_profile']
+          "aws://#{aws_region}/#{aws_profile}"
         end
 
         def define
