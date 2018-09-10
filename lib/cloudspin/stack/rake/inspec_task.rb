@@ -11,7 +11,7 @@ module Cloudspin
         attr_reader :inspec_parameters
 
         def initialize(stack_instance:,
-                       inspec_folder: './inspec',
+                       inspec_folder: './test/inspec',
                        work_folder: nil,
                        inspec_target: nil,
                        inspec_parameters: {})
