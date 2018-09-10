@@ -18,7 +18,7 @@ module Cloudspin
           @stack_instance = stack_instance
           @stack_instance_id = stack_instance.id
           @inspec_target = inspec_target || inspec_target_for_aws
-          @inspec_parameters = inspec_parameters
+          @inspec_parameters = default_parameters.merge(inspec_parameters)
 
           @work_folder = work_folder || @stack_instance.working_folder
           @inspec_folder = inspec_folder
@@ -43,12 +43,14 @@ module Cloudspin
           end
         end
 
+        def default_parameters
+          @stack_instance.parameter_values.merge({ 'stack_instance_id' => stack_instance_id })
+        end
+
         def build_attributes_file
           ensure_path(inspec_attributes_file)
           File.open(inspec_attributes_file, 'w') {|f|
-            f.write(inspec_parameters.merge(
-              { 'stack_instance_id' => stack_instance_id }
-            ).to_yaml)
+            f.write(inspec_parameters.to_yaml)
           }
         end
 
