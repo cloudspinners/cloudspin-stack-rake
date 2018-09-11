@@ -5,29 +5,46 @@ module Cloudspin
 
       class StackTask < ::Rake::TaskLib
 
-        attr_reader :id
         attr_reader :instance
-        attr_reader :definition_folder
-        attr_reader :instance_folder
 
-        def initialize(id:, definition_folder: './src', instance_folder: '.')
+        def initialize(
+            environment = nil,
+            definition_folder: './src',
+            base_folder: '.'
+        )
+          @environment = environment
+          @base_folder = base_folder
+
           @instance = Cloudspin::Stack::Instance.from_folder(
-                default_instance_configuration_files(instance_folder),
-                definition_folder: definition_folder,
-                base_working_folder: "#{instance_folder}/work",
-                base_statefile_folder: "#{instance_folder}/state"
+            instance_configuration_files,
+            definition_folder: definition_folder,
+            base_working_folder: "#{base_folder}/work",
+            base_statefile_folder: "#{base_folder}/state"
           )
           define
         end
 
-        def default_instance_configuration_files(instance_folder)
+        def instance_configuration_files
+          file_list = default_configuration_files
+          if @environment
+            if File.exists? environment_config_file
+              file_list << environment_config_file
+            else
+              raise "Missing configuration file for environment #{options[:environment]} (#{environment_config_file})"
+            end
+          end
+          file_list
+        end
+
+        def default_configuration_files
           [
-            "#{instance_folder}/spin-default.yaml",
-            "#{instance_folder}/stack-instance-default.yaml",
-            "#{instance_folder}/stack-instance-defaults.yaml",
-            "#{instance_folder}/spin-local.yaml",
-            "#{instance_folder}/stack-instance-local.yaml"
+            "#{@base_folder}/stack-instance-defaults.yaml",
+            "#{@base_folder}/stack-instance-local.yaml"
           ]
+        end
+
+        def environment_config_file
+          Pathname.new("#{@base_folder}/environments/stack-instance-#{@environment}.yaml").realdirpath.to_s
         end
 
         def define
