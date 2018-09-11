@@ -11,19 +11,24 @@ module Cloudspin
         attr_reader :instance_folder
 
         def initialize(id:, definition_folder: './src', instance_folder: '.')
-          @instance = Cloudspin::Stack::Instance.from_definition_folder(
-            id: id,
-            definition_folder: definition_folder,
-            instance_folder: instance_folder
+          @instance = Cloudspin::Stack::Instance.from_folder(
+                default_instance_configuration_files(instance_folder),
+                definition_folder: definition_folder,
+                backend_config: {},
+                working_folder: "#{instance_folder}/work",
+                statefile_folder: "#{instance_folder}/state"
           )
-          @instance.add_config_from_yaml("#{instance_folder}/spin-default.yaml")
-          @instance.add_config_from_yaml("#{instance_folder}/stack-instance-default.yaml")
-          @instance.add_config_from_yaml("#{instance_folder}/stack-instance-defaults.yaml")
-          @instance.add_config_from_yaml("#{instance_folder}/spin-local.yaml")
-          @instance.add_config_from_yaml("#{instance_folder}/stack-instance-local.yaml")
-          @instance.add_parameter_values({ :instance_identifier => id })
-
           define
+        end
+
+        def default_instance_configuration_files(instance_folder)
+          [
+            "#{instance_folder}/spin-default.yaml",
+            "#{instance_folder}/stack-instance-default.yaml",
+            "#{instance_folder}/stack-instance-defaults.yaml",
+            "#{instance_folder}/spin-local.yaml",
+            "#{instance_folder}/stack-instance-local.yaml"
+          ]
         end
 
         def define
