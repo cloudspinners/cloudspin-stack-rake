@@ -14,9 +14,8 @@ module Cloudspin
           @instance = Cloudspin::Stack::Instance.from_folder(
                 default_instance_configuration_files(instance_folder),
                 definition_folder: definition_folder,
-                backend_config: {},
-                working_folder: "#{instance_folder}/work",
-                statefile_folder: "#{instance_folder}/state"
+                base_working_folder: "#{instance_folder}/work",
+                base_statefile_folder: "#{instance_folder}/state"
           )
           define
         end
