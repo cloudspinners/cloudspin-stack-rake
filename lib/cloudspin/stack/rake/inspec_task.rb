@@ -44,7 +44,7 @@ module Cloudspin
         end
 
         def default_parameters
-          @stack_instance.parameter_values.merge({ 'stack_instance_id' => stack_instance_id })
+          @stack_instance.parameter_values.merge(@stack_instance.resource_values).merge({ 'instance_identifier' => @stack_instance.id })
         end
 
         def build_attributes_file
