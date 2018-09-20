@@ -6,17 +6,20 @@ module Cloudspin
       class StackTask < ::Rake::TaskLib
 
         attr_reader :instance
+        attr_reader :configuration_files
 
         def initialize(
             environment = nil,
             definition_folder: './src',
-            base_folder: '.'
+            base_folder: '.',
+            configuration_files: nil
         )
           @environment = environment
           @base_folder = base_folder
+          @configuration_files = configuration_files || instance_configuration_files
 
           @instance = Cloudspin::Stack::Instance.from_folder(
-            instance_configuration_files,
+            @configuration_files,
             definition_folder: definition_folder,
             base_working_folder: "#{base_folder}/work",
             base_statefile_folder: "#{base_folder}/state"
