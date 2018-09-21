@@ -49,4 +49,42 @@ RSpec.describe Cloudspin::Stack::Rake::StackTask do
       )
     end
   end
+
+  describe 'with an overridden role' do
+    let (:task) {
+      Cloudspin::Stack::Rake::StackTask.new(
+        role: 'myrole',
+        base_folder: './spec',
+        definition_folder: './spec/dummy/'
+      )
+    }
+    it 'looks for configuration files named for the role' do
+      expect(task.configuration_files).to match_array(
+        [
+          './spec/stack-myrole-defaults.yaml',
+          './spec/stack-myrole-local.yaml'
+        ]
+      )
+    end
+  end
+
+  describe 'with an overridden environment and role' do
+    let (:task) {
+      Cloudspin::Stack::Rake::StackTask.new(
+        'myenv',
+        role: 'myrole',
+        base_folder: './spec',
+        definition_folder: './spec/dummy/'
+      )
+    }
+    it 'looks for configuration files named for the role' do
+      expect(task.configuration_files).to match_array(
+        [
+          './spec/stack-myrole-defaults.yaml',
+          './spec/stack-myrole-local.yaml',
+          './spec/environments/stack-myrole-myenv.yaml'
+        ]
+      )
+    end
+  end
 end

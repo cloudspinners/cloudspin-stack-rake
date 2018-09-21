@@ -6,15 +6,19 @@ module Cloudspin
       class StackTask < ::Rake::TaskLib
 
         attr_reader :instance
+        attr_reader :environment
+        attr_reader :role
         attr_reader :configuration_files
 
         def initialize(
             environment = nil,
+            role: 'instance',
             definition_folder: './src',
             base_folder: '.',
             configuration_files: nil
         )
           @environment = environment
+          @role = role
           @base_folder = base_folder
           @configuration_files = configuration_files || instance_configuration_files
 
@@ -33,7 +37,7 @@ module Cloudspin
             if File.exists? full_path_of(environment_config_file)
               file_list << environment_config_file
             else
-              raise "Missing configuration file for environment #{options[:environment]} (#{environment_config_file})"
+              raise "Missing configuration file for environment #{@environment} (#{environment_config_file})"
             end
           end
           file_list
@@ -41,13 +45,13 @@ module Cloudspin
 
         def default_configuration_files
           [
-            "#{@base_folder}/stack-instance-defaults.yaml",
-            "#{@base_folder}/stack-instance-local.yaml"
+            "#{@base_folder}/stack-#{@role}-defaults.yaml",
+            "#{@base_folder}/stack-#{@role}-local.yaml"
           ]
         end
 
         def environment_config_file
-          "#{@base_folder}/environments/stack-instance-#{@environment}.yaml"
+          "#{@base_folder}/environments/stack-#{@role}-#{@environment}.yaml"
         end
 
         def full_path_of(supplied_path)
