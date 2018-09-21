@@ -30,4 +30,23 @@ RSpec.describe Cloudspin::Stack::Rake::StackTask do
       )
     end
   end
+
+  describe 'for an environment' do
+    let (:task) {
+      Cloudspin::Stack::Rake::StackTask.new(
+        'myenv',
+        base_folder: './spec',
+        definition_folder: './spec/dummy/'
+      )
+    }
+    it 'includes the environment configuration file' do
+      expect(task.configuration_files).to match_array(
+        [
+          './spec/stack-instance-defaults.yaml',
+          './spec/stack-instance-local.yaml',
+          './spec/environments/stack-instance-myenv.yaml'
+        ]
+      )
+    end
+  end
 end

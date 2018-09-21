@@ -30,7 +30,7 @@ module Cloudspin
         def instance_configuration_files
           file_list = default_configuration_files
           if @environment
-            if File.exists? environment_config_file
+            if File.exists? full_path_of(environment_config_file)
               file_list << environment_config_file
             else
               raise "Missing configuration file for environment #{options[:environment]} (#{environment_config_file})"
@@ -47,7 +47,11 @@ module Cloudspin
         end
 
         def environment_config_file
-          Pathname.new("#{@base_folder}/environments/stack-instance-#{@environment}.yaml").realdirpath.to_s
+          "#{@base_folder}/environments/stack-instance-#{@environment}.yaml"
+        end
+
+        def full_path_of(supplied_path)
+          Pathname.new(supplied_path).realdirpath.to_s
         end
 
         def define
