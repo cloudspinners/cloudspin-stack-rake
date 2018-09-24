@@ -20,18 +20,18 @@ module Cloudspin
           @environment = environment
           @role = role
           @base_folder = base_folder
-          @configuration_files = configuration_files || instance_configuration_files
+          @configuration_files = configuration_files || the_usual_configuration_files
 
           @instance = Cloudspin::Stack::Instance.from_folder(
             @configuration_files,
             definition_folder: definition_folder,
-            base_working_folder: "#{base_folder}/work",
-            base_statefile_folder: "#{base_folder}/state"
+            base_folder: @base_folder,
+            base_working_folder: "#{@base_folder}/work"
           )
           define
         end
 
-        def instance_configuration_files
+        def the_usual_configuration_files
           file_list = default_configuration_files
           if @environment
             if File.exists? full_path_of(environment_config_file)
