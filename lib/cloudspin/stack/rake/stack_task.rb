@@ -62,23 +62,27 @@ module Cloudspin
 
           desc "Create or update stack #{@instance.id}"
           task :up do
+            puts @instance.init_dry
             puts @instance.up_dry
             puts @instance.up
           end
 
           desc "Plan changes to stack #{@instance.id}"
           task :plan do
+            puts @instance.init_dry
             puts @instance.plan_dry
             puts @instance.plan
           end
 
           desc "Show command line to be run for stack #{@instance.id}"
           task :dry do
+            puts @instance.init_dry
             puts @instance.up_dry
           end
 
           desc "Destroy stack #{@instance.id}"
           task :down do
+            puts @instance.init_dry
             puts @instance.down_dry
             puts @instance.down
           end
