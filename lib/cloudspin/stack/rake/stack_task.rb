@@ -23,6 +23,7 @@ module Cloudspin
           @base_folder = base_folder
           @configuration_files = configuration_files || the_usual_configuration_files
 
+          # TODO: Pick this up from the configuration files?
           @definition_location = if definition_location
             definition_location
           elsif definition_folder
@@ -118,7 +119,7 @@ module Cloudspin
           end
         end
 
-        # NOTE: This stuff belongs in a core class, so the CLI and other stuff can use it, too.
+        # TODO: This stuff belongs in a core class, so the CLI and other stuff can use it, too.
 
         def fetch_definition_zipfile
           unpack(download_artefact(@definition_location), '.cloudspin/definitions')
