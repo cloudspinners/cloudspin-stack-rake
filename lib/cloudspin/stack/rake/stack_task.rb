@@ -6,20 +6,20 @@ module Cloudspin
       class StackTask < ::Rake::TaskLib
 
         attr_reader :environment
-        attr_reader :role
+        attr_reader :stack_name
         attr_reader :definition_folder
         attr_reader :configuration_files
 
         def initialize(
             environment = nil,
-            role: 'instance',
+            stack_name: 'instance',
             definition_folder: nil, # Should be deprecated
             definition_location: nil,
             base_folder: '.',
             configuration_files: nil
         )
           @environment = environment
-          @role = role
+          @stack_name = stack_name
           @base_folder = base_folder
           @configuration_files = configuration_files || the_usual_configuration_files
 
@@ -43,6 +43,7 @@ module Cloudspin
             puts "Will use local stack definition files in #{local_definition_folder}"
             Cloudspin::Stack::Instance.from_folder(
               @configuration_files,
+              stack_name: stack_name,
               definition_folder: local_definition_folder,
               base_folder: @base_folder,
               base_working_folder: "#{@base_folder}/work"
@@ -76,13 +77,13 @@ module Cloudspin
 
         def default_configuration_files
           [
-            "#{@base_folder}/stack-#{@role}-defaults.yaml",
-            "#{@base_folder}/stack-#{@role}-local.yaml"
+            "#{@base_folder}/stack-#{@stack_name}-defaults.yaml",
+            "#{@base_folder}/stack-#{@stack_name}-local.yaml"
           ]
         end
 
         def environment_config_file
-          "#{@base_folder}/environments/stack-#{@role}-#{@environment}.yaml"
+          "#{@base_folder}/environments/stack-#{@stack_name}-#{@environment}.yaml"
         end
 
         def full_path_of(supplied_path)
