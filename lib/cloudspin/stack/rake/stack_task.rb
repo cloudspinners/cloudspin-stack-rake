@@ -37,53 +37,6 @@ module Cloudspin
           define
         end
 
-        def instance
-          @instance ||= begin
-            local_definition_folder = fetch_definition
-            puts "Will use local stack definition files in #{local_definition_folder}"
-
-            the_instance = Cloudspin::Stack::Instance.from_folder(
-              @configuration_files,
-              stack_name: stack_name,
-              definition_folder: local_definition_folder,
-              base_folder: @base_folder,
-              base_working_folder: "#{@base_folder}/work"
-            )
-
-            if the_instance.configuration.has_remote_state_configuration?
-              add_terraform_backend_source(local_definition_folder)
-            end
-
-            the_instance
-          end
-        end
-
-        def fetch_definition
-          if /^http.*\.zip$/.match @definition_location
-            puts "Downloading stack definition source from a remote zipfile"
-            fetch_definition_zipfile
-          elsif /^[\.\/]/.match @definition_location
-            puts "Using local stack definition source"
-            @definition_location
-          else
-            raise UnsupportedStackDefinitionLocationError, @definition_location
-          end
-        end
-
-        def add_terraform_backend_source(terraform_source_folder)
-
-          puts "Creating file #{terraform_source_folder}/_cloudspin_created_backend.tf"
-
-          File.open("#{terraform_source_folder}/_cloudspin_created_backend.tf", 'w') { |backend_file|
-            backend_file.write(<<~TF_BACKEND_SOURCE
-              terraform {
-                backend "s3" {}
-              }
-            TF_BACKEND_SOURCE
-            )
-          }
-        end
-
         def the_usual_configuration_files
           file_list = default_configuration_files
           if @environment
@@ -145,7 +98,52 @@ module Cloudspin
           end
         end
 
+        def instance
+          @instance ||= begin
+            local_definition_folder = fetch_definition
+            puts "Will use local stack definition files in #{local_definition_folder}"
+
+            the_instance = Cloudspin::Stack::Instance.from_folder(
+              @configuration_files,
+              stack_name: stack_name,
+              definition_folder: local_definition_folder,
+              base_folder: @base_folder,
+              base_working_folder: "#{@base_folder}/work"
+            )
+
+            if the_instance.configuration.has_remote_state_configuration?
+              add_terraform_backend_source(local_definition_folder)
+            end
+
+            the_instance
+          end
+        end
+
+        def add_terraform_backend_source(terraform_source_folder)
+          puts "Creating file #{terraform_source_folder}/_cloudspin_created_backend.tf"
+          File.open("#{terraform_source_folder}/_cloudspin_created_backend.tf", 'w') { |backend_file|
+            backend_file.write(<<~TF_BACKEND_SOURCE
+              terraform {
+                backend "s3" {}
+              }
+            TF_BACKEND_SOURCE
+            )
+          }
+        end
+
         # TODO: This stuff belongs in a core class, so the CLI and other stuff can use it, too.
+
+        def fetch_definition
+          if /^http.*\.zip$/.match @definition_location
+            puts "Downloading stack definition source from a remote zipfile"
+            fetch_definition_zipfile
+          elsif /^[\.\/]/.match @definition_location
+            puts "Using local stack definition source"
+            @definition_location
+          else
+            raise UnsupportedStackDefinitionLocationError, @definition_location
+          end
+        end
 
         def fetch_definition_zipfile
           unpack(download_artefact(@definition_location), '.cloudspin/definitions')
