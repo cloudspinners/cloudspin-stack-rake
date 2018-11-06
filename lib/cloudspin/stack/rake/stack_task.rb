@@ -38,7 +38,7 @@ module Cloudspin
         end
 
         def set_configuration_files(additional_configuration_files)
-          @configuration_files = the_usual_configuration_files.append(additional_configuration_files).flatten.compact
+          @configuration_files = (the_usual_configuration_files << additional_configuration_files).flatten.compact
         end
 
         def the_usual_configuration_files
