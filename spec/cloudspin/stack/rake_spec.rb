@@ -63,11 +63,11 @@ RSpec.describe Cloudspin::Stack::Rake::StackTask do
         definition_folder: './spec/dummy/'
       )
     }
-    it 'looks for configuration files named for the stack_name' do
+    it 'does not look for configuration files named for the stack_name' do
       expect(task.configuration_files).to match_array(
         [
-          './spec/stack-my_stack_name-defaults.yaml',
-          './spec/stack-my_stack_name-local.yaml'
+          './spec/stack-instance-defaults.yaml',
+          './spec/stack-instance-local.yaml'
         ]
       )
     end
@@ -85,8 +85,8 @@ RSpec.describe Cloudspin::Stack::Rake::StackTask do
     it 'looks for configuration files named for the stack_name' do
       expect(task.configuration_files).to match_array(
         [
-          './spec/stack-my_stack_name-defaults.yaml',
-          './spec/stack-my_stack_name-local.yaml',
+          './spec/stack-instance-defaults.yaml',
+          './spec/stack-instance-local.yaml',
           './spec/environments/stack-my_stack_name-myenv.yaml'
         ]
       )

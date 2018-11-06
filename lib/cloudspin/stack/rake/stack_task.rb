@@ -55,8 +55,8 @@ module Cloudspin
 
         def default_configuration_files
           [
-            "#{@base_folder}/stack-#{@stack_name}-defaults.yaml",
-            "#{@base_folder}/stack-#{@stack_name}-local.yaml"
+            "#{@base_folder}/stack-instance-defaults.yaml",
+            "#{@base_folder}/stack-instance-local.yaml"
           ]
         end
 
