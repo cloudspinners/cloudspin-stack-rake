@@ -26,7 +26,12 @@ RSpec.describe Cloudspin::Stack::Rake::StackTask do
     }
     it 'has the expected file list' do
       expect(task.configuration_files).to match_array(
-        [ 'one.yaml', 'two.yaml' ]
+        [
+          './stack-instance-defaults.yaml',
+          './stack-instance-local.yaml',
+          'one.yaml',
+          'two.yaml'
+        ]
       )
     end
   end

@@ -21,7 +21,7 @@ module Cloudspin
           @environment = environment
           @stack_name = stack_name
           @base_folder = base_folder
-          @configuration_files = configuration_files || the_usual_configuration_files
+          set_configuration_files(configuration_files)
 
           # TODO: Pick this up from the configuration files?
           @definition_location = if definition_location
@@ -35,6 +35,10 @@ module Cloudspin
 
           # @remote_zipfile = remote_zipfile
           define
+        end
+
+        def set_configuration_files(additional_configuration_files)
+          @configuration_files = the_usual_configuration_files.append(additional_configuration_files).flatten.compact
         end
 
         def the_usual_configuration_files
