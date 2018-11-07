@@ -7,13 +7,11 @@ module Cloudspin
 
         attr_reader :environment
         attr_reader :stack_name
-        attr_reader :definition_folder
         attr_reader :configuration_files
 
         def initialize(
             environment = nil,
             stack_name: 'instance',
-            definition_folder: nil, # Should be deprecated
             definition_location: nil,
             base_folder: '.',
             configuration_files: nil
@@ -26,9 +24,6 @@ module Cloudspin
           # TODO: Pick this up from the configuration files?
           @definition_location = if definition_location
             definition_location
-          elsif definition_folder
-            puts "'definition_folder': is deprecated for Cloudspin::Stack::Rake::StackTask - use 'definition_location' instead"
-            definition_folder
           else
             './src'
           end

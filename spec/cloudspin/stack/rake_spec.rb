@@ -6,7 +6,7 @@ end
 
 RSpec.describe Cloudspin::Stack::Rake::StackTask do
   describe 'with no parameters' do
-    let (:task) { Cloudspin::Stack::Rake::StackTask.new(definition_folder: './spec/dummy/') }
+    let (:task) { Cloudspin::Stack::Rake::StackTask.new(definition_location: './spec/dummy/') }
     it 'sets the default instance configuration files' do
       expect(task.configuration_files).to match_array(
         [
@@ -20,7 +20,7 @@ RSpec.describe Cloudspin::Stack::Rake::StackTask do
   describe 'overriding the configuration files' do
     let (:task) {
       Cloudspin::Stack::Rake::StackTask.new(
-        definition_folder: './spec/dummy/',
+        definition_location: './spec/dummy/',
         configuration_files: [ 'one.yaml', 'two.yaml' ]
       )
     }
@@ -41,7 +41,7 @@ RSpec.describe Cloudspin::Stack::Rake::StackTask do
       Cloudspin::Stack::Rake::StackTask.new(
         'myenv',
         base_folder: './spec',
-        definition_folder: './spec/dummy/'
+        definition_location: './spec/dummy/'
       )
     }
     it 'includes the environment configuration file' do
@@ -60,7 +60,7 @@ RSpec.describe Cloudspin::Stack::Rake::StackTask do
       Cloudspin::Stack::Rake::StackTask.new(
         stack_name: 'my_stack_name',
         base_folder: './spec',
-        definition_folder: './spec/dummy/'
+        definition_location: './spec/dummy/'
       )
     }
     it 'does not look for configuration files named for the stack_name' do
@@ -79,7 +79,7 @@ RSpec.describe Cloudspin::Stack::Rake::StackTask do
         'myenv',
         stack_name: 'my_stack_name',
         base_folder: './spec',
-        definition_folder: './spec/dummy/'
+        definition_location: './spec/dummy/'
       )
     }
     it 'looks for configuration files named for the stack_name' do
