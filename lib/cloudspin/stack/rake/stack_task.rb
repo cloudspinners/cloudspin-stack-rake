@@ -168,6 +168,7 @@ module Cloudspin
         def unpack(zipfile, where_to_put_it)
           folder_name = path_of_source_in(zipfile)
           puts "Unzipping #{zipfile} to #{where_to_put_it}"
+          clear_folder(where_to_put_it)
           Zip::File.open(zipfile) { |zip_file|
             zip_file.each { |f|
               puts "-> #{f.name}"
@@ -178,6 +179,10 @@ module Cloudspin
           }
           puts "Definition unpacked to #{where_to_put_it}/#{folder_name}"
           "#{where_to_put_it}/#{folder_name}"
+        end
+
+        def clear_folder(folder_to_clear)
+          FileUtils.remove_entry_secure(folder_to_clear)
         end
 
         def path_of_source_in(zipfile_path)
