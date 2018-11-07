@@ -135,74 +135,7 @@ module Cloudspin
           }
         end
 
-        # TODO: This stuff belongs in a core class, so the CLI and other stuff can use it, too.
-
-        def fetch_definition
-          if /^http.*\.zip$/.match @definition_location
-            puts "Downloading stack definition source from a remote zipfile"
-            fetch_definition_zipfile
-          elsif /^[\.\/]/.match @definition_location
-            puts "Using local stack definition source"
-            @definition_location
-          else
-            raise UnsupportedStackDefinitionLocationError, @definition_location
-          end
-        end
-
-        def fetch_definition_zipfile
-          unpack(download_artefact(@definition_location), '.cloudspin/definitions')
-        end
-
-        def download_artefact(artefact_url)
-          download_dir = Dir.mktmpdir(['cloudspin-', '-download'])
-          zipfile = "#{download_dir}/undetermined-spin-stack-artefact.zip"
-          puts "Downloading artefact from #{artefact_url} to #{zipfile}"
-          File.open(zipfile, 'wb') do |saved_file|
-            open(artefact_url, 'rb') do |read_file|
-              saved_file.write(read_file.read)
-            end
-          end
-          zipfile
-        end
-
-        def unpack(zipfile, where_to_put_it)
-          folder_name = path_of_source_in(zipfile)
-          puts "Unzipping #{zipfile} to #{where_to_put_it}"
-          clear_folder(where_to_put_it)
-          Zip::File.open(zipfile) { |zip_file|
-            zip_file.each { |f|
-              puts "-> #{f.name}"
-              f_path = File.join(where_to_put_it, f.name)
-              FileUtils.mkdir_p(File.dirname(f_path))
-              zip_file.extract(f, f_path) unless File.exist?(f_path)
-            }
-          }
-          puts "Definition unpacked to #{where_to_put_it}/#{folder_name}"
-          "#{where_to_put_it}/#{folder_name}"
-        end
-
-        def clear_folder(folder_to_clear)
-          FileUtils.remove_entry_secure(folder_to_clear)
-        end
-
-        def path_of_source_in(zipfile_path)
-          File.dirname(path_of_configuration_file_in(zipfile_path))
-        end
-
-        def path_of_configuration_file_in(zipfile_path)
-          zipfile = Zip::File.open(zipfile_path)
-          begin
-            zipfile.entries.select { |entry|
-              /\/stack-definition.yaml$/.match entry.name
-            }.first.name
-          ensure
-            zipfile.close
-          end
-        end
-
       end
-
-      class UnsupportedStackDefinitionLocationError < StandardError; end
 
     end
   end
