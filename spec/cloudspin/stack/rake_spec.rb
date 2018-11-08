@@ -58,7 +58,6 @@ RSpec.describe Cloudspin::Stack::Rake::StackTask do
   describe 'with an overridden stack_name' do
     let (:task) {
       Cloudspin::Stack::Rake::StackTask.new(
-        stack_name: 'my_stack_name',
         base_folder: './spec',
         definition_location: './spec/dummy/'
       )
@@ -77,7 +76,6 @@ RSpec.describe Cloudspin::Stack::Rake::StackTask do
     let (:task) {
       Cloudspin::Stack::Rake::StackTask.new(
         'myenv',
-        stack_name: 'my_stack_name',
         base_folder: './spec',
         definition_location: './spec/dummy/'
       )
@@ -87,7 +85,7 @@ RSpec.describe Cloudspin::Stack::Rake::StackTask do
         [
           './spec/stack-instance-defaults.yaml',
           './spec/stack-instance-local.yaml',
-          './spec/environments/stack-my_stack_name-myenv.yaml'
+          './spec/environments/stack-instance-myenv.yaml'
         ]
       )
     end

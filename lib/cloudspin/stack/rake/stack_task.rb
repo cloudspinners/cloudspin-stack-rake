@@ -6,18 +6,15 @@ module Cloudspin
       class StackTask < ::Rake::TaskLib
 
         attr_reader :environment
-        attr_reader :stack_name
         attr_reader :configuration_files
 
         def initialize(
             environment = nil,
-            stack_name: 'instance',
             definition_location: nil,
             base_folder: '.',
             configuration_files: nil
         )
           @environment = environment
-          @stack_name = stack_name
           @base_folder = base_folder
           set_configuration_files(configuration_files)
 
@@ -56,7 +53,7 @@ module Cloudspin
         end
 
         def environment_config_file
-          "#{@base_folder}/environments/stack-#{@stack_name}-#{@environment}.yaml"
+          "#{@base_folder}/environments/stack-instance-#{@environment}.yaml"
         end
 
         def full_path_of(supplied_path)
@@ -100,7 +97,6 @@ module Cloudspin
         def instance
           @instance ||= Cloudspin::Stack::Instance.from_folder(
             @configuration_files,
-            stack_name: stack_name,
             definition_location: @definition_location,
             base_folder: @base_folder,
             base_working_folder: "#{@base_folder}/work"
