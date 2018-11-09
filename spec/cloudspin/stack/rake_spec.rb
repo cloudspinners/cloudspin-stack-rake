@@ -54,40 +54,4 @@ RSpec.describe Cloudspin::Stack::Rake::StackTask do
       )
     end
   end
-
-  describe 'with an overridden stack_name' do
-    let (:task) {
-      Cloudspin::Stack::Rake::StackTask.new(
-        base_folder: './spec',
-        definition_location: './spec/dummy/'
-      )
-    }
-    it 'does not look for configuration files named for the stack_name' do
-      expect(task.configuration_files).to match_array(
-        [
-          './spec/stack-instance-defaults.yaml',
-          './spec/stack-instance-local.yaml'
-        ]
-      )
-    end
-  end
-
-  describe 'with an overridden environment and stack_name' do
-    let (:task) {
-      Cloudspin::Stack::Rake::StackTask.new(
-        'myenv',
-        base_folder: './spec',
-        definition_location: './spec/dummy/'
-      )
-    }
-    it 'looks for configuration files named for the stack_name' do
-      expect(task.configuration_files).to match_array(
-        [
-          './spec/stack-instance-defaults.yaml',
-          './spec/stack-instance-local.yaml',
-          './spec/environments/stack-instance-myenv.yaml'
-        ]
-      )
-    end
-  end
 end
