@@ -18,14 +18,7 @@ module Cloudspin
           @base_folder = base_folder
           set_configuration_files(configuration_files)
 
-          # TODO: Pick this up from the configuration files?
-          @definition_location = if definition_location
-            definition_location
-          else
-            './src'
-          end
-
-          # @remote_zipfile = remote_zipfile
+          @definition_location = definition_location
           define
         end
 
