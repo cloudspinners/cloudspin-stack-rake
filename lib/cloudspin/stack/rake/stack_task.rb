@@ -57,33 +57,33 @@ module Cloudspin
 
           desc "Create or update stack instance"
           task :up do
-            puts instance.init_dry
-            puts instance.up_dry
-            puts instance.up
+            puts terraform_runner.init_dry
+            puts terraform_runner.up_dry
+            puts terraform_runner.up
           end
 
           desc "Plan changes to stack instance"
           task :plan do
-            puts instance.init_dry
-            puts instance.plan_dry
-            puts instance.plan
+            puts terraform_runner.init_dry
+            puts terraform_runner.plan_dry
+            puts terraform_runner.plan
           end
 
           desc "Show command line to be run for stack instance"
           task :dry do
-            puts instance.init_dry
-            puts instance.up_dry
+            puts terraform_runner.init_dry
+            puts terraform_runner.up_dry
           end
 
           desc "Destroy stack instance"
           task :down do
-            puts instance.init_dry
-            puts instance.down_dry
-            puts instance.down
+            puts terraform_runner.init_dry
+            puts terraform_runner.down_dry
+            puts terraform_runner.down
           end
 
           task :refresh do
-            puts instance.refresh
+            puts terraform_runner.refresh
           end
         end
 
@@ -93,6 +93,14 @@ module Cloudspin
             definition_location: @definition_location,
             base_folder: @base_folder,
             base_working_folder: "#{@base_folder}/work"
+          )
+        end
+
+        def terraform_runner
+          @terraform_runner ||= Cloudspin::Stack::Terraform.new(
+            working_folder: instance.working_folder,
+            terraform_variables: instance.terraform_variables,
+            terraform_init_arguments: instance.terraform_init_arguments
           )
         end
 
