@@ -61,6 +61,7 @@ module Cloudspin
             puts terraform_runner.up_dry
             instance.prepare
             puts terraform_runner.up
+            instance.after
           end
 
           desc "Plan changes to stack instance"
@@ -69,6 +70,7 @@ module Cloudspin
             puts terraform_runner.plan_dry
             instance.prepare
             puts terraform_runner.plan
+            instance.after
           end
 
           desc "Show command line to be run for stack instance"
@@ -83,6 +85,7 @@ module Cloudspin
             puts terraform_runner.down_dry
             instance.prepare
             puts terraform_runner.down
+            instance.after
           end
 
           task :refresh do
