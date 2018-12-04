@@ -59,6 +59,7 @@ module Cloudspin
           task :up do
             puts terraform_runner.init_dry
             puts terraform_runner.up_dry
+            instance.prepare
             puts terraform_runner.up
           end
 
@@ -66,6 +67,7 @@ module Cloudspin
           task :plan do
             puts terraform_runner.init_dry
             puts terraform_runner.plan_dry
+            instance.prepare
             puts terraform_runner.plan
           end
 
@@ -79,10 +81,12 @@ module Cloudspin
           task :down do
             puts terraform_runner.init_dry
             puts terraform_runner.down_dry
+            instance.prepare
             puts terraform_runner.down
           end
 
           task :refresh do
+            instance.prepare
             puts terraform_runner.refresh
           end
         end
@@ -100,7 +104,8 @@ module Cloudspin
           @terraform_runner ||= Cloudspin::Stack::Terraform.new(
             working_folder: instance.working_folder,
             terraform_variables: instance.terraform_variables,
-            terraform_init_arguments: instance.terraform_init_arguments
+            terraform_init_arguments: instance.terraform_init_arguments,
+            terraform_command_arguments: instance.terraform_command_arguments
           )
         end
 
